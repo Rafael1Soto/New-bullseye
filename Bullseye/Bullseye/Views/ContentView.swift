@@ -20,27 +20,17 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
             VStack {
                 VStack {
-                    VStack {
-                        Text("🎯🎯🎯\nPut the bullseye as close as you can to".uppercased())
-                            .bold()
-                            .kerning(2.0)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(4.0)
-                            .font(.footnote)
-                        
-                        Text(String(game.target))
-                            .fontWeight(.black)
-                            .kerning(-1.0)
-                            .font(.largeTitle)
-                                    
-                    }
+                    
+                    InstructionsView(game: $game)
                     HStack {
                         Text("1")
                             .bold()
+                            .foregroundColor(Color("TextColor"))
                         Slider(value: $sliderValue, in: 1.0...100.0)
                         
                         Text("100")
                             .bold()
+                            .foregroundColor(Color("TextColor"))
                     }
                     .padding()
                     
@@ -52,11 +42,16 @@ struct ContentView: View {
                         Text("Hit Me".uppercased())
                             .bold()
                             .font(.title3)
-                        
+                            
                     }
                     .foregroundColor(Color.white)
                     .padding(20.0)
-                    .background(Color("ButtonColor"))
+                    .background(
+                        ZStack {
+                            Color("ButtonColor")
+                            LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.3), Color.clear]), startPoint: .top, endPoint: .bottom)
+                                                    }
+                    )
                     .cornerRadius(21.0)
                     
                     
@@ -72,12 +67,32 @@ struct ContentView: View {
             
     }
 
+    struct InstructionsView: View {
+        @Binding var game: Game
+        
+        var body: some View{
+            VStack {
+                InstructionText(text: "🎯🎯🎯\nPut the bullseye as close as you can to")
+                .padding(.leading, 30.0)
+                .padding(.trailing, 30.0)
+                
+                
+                BigNumberText(text: String(game.target))
+            }
+        }
+    }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environment(\.sizeCategory, .large)
         ContentView()
+            .previewLayout(.fixed(width: 568, height: 320 ))
+        
+        ContentView()
+            .preferredColorScheme(.dark)
+        
+        ContentView()
+            .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 568, height: 320 ))
     }
 }
