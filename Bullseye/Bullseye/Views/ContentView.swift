@@ -10,8 +10,8 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var alertIsVisible = false
-    @State private var sliderValue = 10.0
     @State private var game = Game()
+    @State private var sliderValue = 10.0
     
     var body: some View {
         ZStack {
@@ -22,44 +22,12 @@ struct ContentView: View {
                 VStack {
                     
                     InstructionsView(game: $game)
-                    HStack {
-                        Text("1")
-                            .bold()
-                            .foregroundColor(Color("TextColor"))
-                        Slider(value: $sliderValue, in: 1.0...100.0)
-                        
-                        Text("100")
-                            .bold()
-                            .foregroundColor(Color("TextColor"))
-                    }
-                    .padding()
                     
+                    SliderView(sliderValue: $sliderValue)
                     
-                    Button(action: {
-                        print("Hello SwiftUi")
-                        alertIsVisible = true
-                    }) {
-                        Text("Hit Me".uppercased())
-                            .bold()
-                            .font(.title3)
-                            
-                    }
-                    .foregroundColor(Color.white)
-                    .padding(20.0)
-                    .background(
-                        ZStack {
-                            Color("ButtonColor")
-                            LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.3), Color.clear]), startPoint: .top, endPoint: .bottom)
+                    HitMeButton(alertIsVisible: $alertIsVisible, game: $game, sliderValue: $sliderValue)
                                                     }
-                    )
-                    .cornerRadius(21.0)
-                    
-                    
-                    
-                    .alert(isPresented: $alertIsVisible, content: {
-                            let roundedValue: Int = Int(sliderValue.rounded())
-                            return Alert(title: Text("Hello there!"), message: Text("This slider value is \(roundedValue).\n" + "You scored \(game.points(sliderValue: roundedValue)) points this round."), dismissButton: .default(Text("Awesome")))
-                        })
+                
                 }
                 
             }
@@ -82,6 +50,52 @@ struct ContentView: View {
         }
     }
 
+struct SliderView: View {
+    @Binding var sliderValue: Double
+    
+    var body: some View{
+        HStack {
+            SliderLabelText(text: "1")
+            
+            Slider(value: $sliderValue, in: 1.0...100.0)
+            
+            SliderLabelText(text: "100")
+        }
+        .padding()
+    }
+}
+
+struct HitMeButton: View {
+    @Binding var alertIsVisible: Bool
+    @Binding var game: Game
+    @Binding var sliderValue: Double
+    
+    var body: some View {
+        
+        Button(action: {
+            print("Hello SwiftUi")
+            alertIsVisible = true
+        }) {
+            Text("Hit Me".uppercased())
+                .bold()
+                .font(.title3)
+                
+        }
+        .foregroundColor(Color.white)
+        .padding(20.0)
+        .background(
+            ZStack {
+                Color("ButtonColor")
+                LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.3), Color.clear]), startPoint: .top, endPoint: .bottom)
+                                        })
+        .cornerRadius(21.0)
+        .alert(isPresented: $alertIsVisible, content: {
+                let roundedValue: Int = Int(sliderValue.rounded())
+                return Alert(title: Text("Hello there!"), message: Text("This slider value is \(roundedValue).\n" + "You scored \(game.points(sliderValue: roundedValue)) points this round."), dismissButton: .default(Text("Awesome")))
+            })
+        }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
@@ -96,4 +110,4 @@ struct ContentView_Previews: PreviewProvider {
             .previewLayout(.fixed(width: 568, height: 320 ))
     }
 }
-}
+
