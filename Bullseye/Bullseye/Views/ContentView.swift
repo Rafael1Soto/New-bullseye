@@ -89,6 +89,10 @@ struct HitMeButton: View {
                 LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.3), Color.clear]), startPoint: .top, endPoint: .bottom)
                                         })
         .cornerRadius(21.0)
+        .overlay(
+            RoundedRectangle(cornerRadius: 21.0 )
+                .strokeBorder(Color.white, lineWidth: 2.0, antialiased: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+        )
         .alert(isPresented: $alertIsVisible, content: {
                 let roundedValue: Int = Int(sliderValue.rounded())
                 return Alert(title: Text("Hello there!"), message: Text("This slider value is \(roundedValue).\n" + "You scored \(game.points(sliderValue: roundedValue)) points this round."), dismissButton: .default(Text("Awesome")))
